@@ -1,6 +1,6 @@
 #include "Contact.hpp"
 
-Contact::Contact() {}
+Contact::Contact(): _firstName(""), _lastName(""), _nickname(""), _phoneNumber(""), _darkestSecret("") {}
 Contact::~Contact() {}
 
 void Contact::init(std::string f, std::string l, std::string n, std::string p, std::string s)
