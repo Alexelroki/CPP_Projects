@@ -3,7 +3,8 @@
 Contact::Contact() {}
 Contact::~Contact() {}
 
-void Contact::init(std::string f, std::string l, std::string n, std::string p, std::string s) {
+void Contact::init(std::string f, std::string l, std::string n, std::string p, std::string s)
+{
     this->_firstName = f;
     this->_lastName = l;
     this->_nickname = n;

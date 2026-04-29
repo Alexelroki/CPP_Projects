@@ -3,7 +3,8 @@
 PhoneBook::PhoneBook() : _count(0), _index(0) {}
 PhoneBook::~PhoneBook() {}
 
-void PhoneBook::add() {
+void PhoneBook::add()
+{
     std::string f, l, n, p, s;
     std::cout << "First Name: "; std::getline(std::cin, f);
     std::cout << "Last Name: "; std::getline(std::cin, l);
@@ -20,13 +21,15 @@ void PhoneBook::add() {
     if (_count < 8) _count++;
 }
 
-std::string truncate(std::string str) {
+std::string truncate(std::string str)
+{
     if (str.length() > 10)
-        return str.substr(0, 9) + "."; // Reemplaza el décimo por un punto [cite: 171]
-    return str;
+        return (str.substr(0, 9) + "."); // Reemplaza el décimo por un punto [cite: 171]
+    return (str);
 }
 
-void PhoneBook::search() const {
+void PhoneBook::search() const
+{
     std::cout << "|     Index|First Name| Last Name|  Nickname|" << std::endl;
     for (int i = 0; i < _count; i++) {
         std::cout << "|" << std::setw(10) << i;
