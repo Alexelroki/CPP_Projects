@@ -4,20 +4,20 @@
 # include "Contact.hpp"
 # include <iomanip> // Para std::setw (formato de tabla)
 
-class PhoneBook
+class Phonebook
 {
-    private:
-        Contact _contacts[8];
-        int     _count;  // Cuántos hay en total (máximo 8)
-        int     _index;  // Cuál es el siguiente a escribir (0-7)
+	private:
+		Contact	_contacts[8];
+		int		_total;
+		int		_next;
 
-    public:
-        PhoneBook();
-        ~PhoneBook();
+	public:
+		Phonebook();
+		~Phonebook();
 
-        void    add();
-        void    search() const;
-        void    printContact(int i) const;
-};
+		void	setContact();
+		void	getContactInfo();
+		void	getContactList();
+}
 
 #endif

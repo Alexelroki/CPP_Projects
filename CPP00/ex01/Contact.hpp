@@ -1,31 +1,32 @@
 #ifndef CONTACT_HPP
 # define CONTACT_HPP
 
-# include <iostream>
 # include <string>
 
 class Contact
 {
-    private:
-        std::string _firstName;
-        std::string _lastName;
-        std::string _nickname;
-        std::string _phoneNumber;
-        std::string _darkestSecret;
+	private:
+		std::string _firstName;
+		std::string _lastName;
+		std::string _nickName;
+		std::string _phoneNumber;
+		std::string _darkestSecret;
 
-    public:
-        Contact();
-        ~Contact();
+	public:
+		Contact();
+		~Contact();
 
-        // Setters: para guardar la info - first, last, nickname, phone, secret
-        void    init(std::string f, std::string l, std::string n, std::string p, std::string s);
-        
-        // Getters: para recuperar la info (necesarios para SEARCH)
-        std::string getFirstName() const;
-        std::string getLastName() const;
-        std::string getNickname() const;
-        std::string getPhoneNumber() const;
-        std::string getDarkestSecret() const;
+		void	setFirstName(const std::string& f);
+		void	setLastName(const std::string& l);
+		void	setNickName(const std::string& n);
+		void	setPhoneNumber(const std::string& p);
+		void	setDarkestSecret(const std::string& d);
+
+		std::string	getFirstName() const;
+		std::string	getLastName() const;
+		std::string	getNickName() const;
+		std::string	getPhoneNumber() const;
+		std::string	getDarkestSecret() const;
 };
 
 #endif
