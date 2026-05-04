@@ -2,9 +2,9 @@
 # define PHONEBOOK_HPP
 
 # include "Contact.hpp"
-# include <iomanip> // Para std::setw (formato de tabla)
+# include <iomanip>
 
-class Phonebook
+class PhoneBook
 {
 	private:
 		Contact	_contacts[8];
@@ -12,12 +12,12 @@ class Phonebook
 		int		_next;
 
 	public:
-		Phonebook();
-		~Phonebook();
+		PhoneBook();
+		~PhoneBook();
 
 		void	setContact();
-		void	getContactInfo();
-		void	getContactList();
-}
+		void	getContactList() const;
+		Contact	getContactInfo(int who) const;
+};
 
 #endif
