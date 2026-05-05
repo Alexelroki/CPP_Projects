@@ -55,7 +55,7 @@ void	PhoneBook::getContactList() const
 
 	for (int i = 0; i < _total; i++)
 	{
-		std::cout << "|" << std::setw(10) << i;
+		std::cout << "|" << std::setw(10) << i + 1;
 		std::cout << "|" << std::setw(10) << formatString(_contacts[i].getFirstName());
 		std::cout << "|" << std::setw(10) << formatString(_contacts[i].getLastName());
 		std::cout << "|" << std::setw(10) << formatString(_contacts[i].getNickName());
@@ -63,9 +63,24 @@ void	PhoneBook::getContactList() const
 	}
 }
 
-Contact	PhoneBook::getContactInfo(int who) const
+void	PhoneBook::getContactInfo(const std::string& input) const
 {
-	if (who < 0 || who >= _total)
-		return Contact();
-	return (_contacts[who]);
+	if (input.length() != 1 || input[0] < '1' || input[0] > '8')
+	{
+		std::cout << "Invalid index or no contacts" << std::endl;
+		return ;
+	}
+
+	int	who = input[0] - '1';
+
+	if (who >= _total)
+	{
+		std::cout << "Error: Contact #" << who << " does not exist yet." << std::endl;
+		return ;
+	}
+	std::cout << "First name: " << _contacts[who].getFirstName() << std::endl;
+	std::cout << "Last name: " << _contacts[who].getLastName() << std::endl;
+	std::cout << "Nick name: " << _contacts[who].getNickName() << std::endl;
+	std::cout << "Phone number: " << _contacts[who].getPhoneNumber() << std::endl;
+	std::cout << "Darkest secret: " << _contacts[who].getDarkestSecret() << std::endl;
 }
