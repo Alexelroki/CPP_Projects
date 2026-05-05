@@ -7,6 +7,7 @@ void	Contact::setFirstName(const std::string& f)
 {
 	_firstName = f;
 }
+
 void	Contact::setLastName(const std::string& l)
 {
 	_lastName = l;
