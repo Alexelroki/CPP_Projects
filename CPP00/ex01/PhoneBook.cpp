@@ -3,42 +3,30 @@
 PhoneBook::PhoneBook(): _total(0), _next(0) {}
 PhoneBook::~PhoneBook() {}
 
+static void	_getInput(std::string prompt, std::string& field)
+{
+	while (field.empty())
+	{
+		std::cout << prompt;
+		if (!std::getline(std::cin, field))
+			return ;
+		if (field.empty())
+			std::cout << "Input cannot be empty. Please try again." << std::endl;
+	}
+}
+
 void	PhoneBook::setContact()
 {
 	std::string first, last, nick, phone, darkest;
 
-	// Dividir esta función en dos, para comprobar que no haya ningún
-	// campo de la tabla vacío, con algo como:
-	/*void    PhoneBook::setContact()
-	{
-		std::string first;
+	_getInput("First name: ", first);
+	_getInput("Last name: ", last);
+	_getInput("Nick name: ", nick);
+	_getInput("Phone number: ", phone);
+	_getInput("Darkest secret: ", darkest);
 
-		// Usamos un bucle para obligar a que escriba algo
-		while (first.empty()) 
-		{
-			std::cout << "First name: ";
-			if (!std::getline(std::cin, first)) // Protección extra por si pulsan Ctrl+D
-				return ;
-			if (first.empty())
-				std::cout << "Error: Field can't be empty." << std::endl;
-		}
-		
-		// Una vez que sale del while, ya tienes un 'first' con contenido
-		_contacts[_next].setFirstName(first);
-		
-		// ... repetir lo mismo para los demás campos ...
-	}*/
-
-	std::cout << "First name: " << std::endl;
-	std::getline(std::cin, first);
-	std::cout << "Last name: " << std::endl;
-	std::getline(std::cin, last);
-	std::cout << "Nick name: " << std::endl;
-	std::getline(std::cin, nick);
-	std::cout << "Phone number: " << std::endl;
-	std::getline(std::cin, phone);
-	std::cout << "Darkest secret: " << std::endl;
-	std::getline(std::cin, darkest);
+	if (first.empty() || last.empty() || nick.empty() || phone.empty() || darkest.empty())
+		return ;
 
 	_contacts[_next].setFirstName(first);
 	_contacts[_next].setLastName(last);
@@ -51,7 +39,7 @@ void	PhoneBook::setContact()
 		_total += 1;
 }
 
-static std::string	formatString(std::string str)
+static std::string	formatString(const std::string& str)
 {
 	if (str.length() > 10)
 		return (str.substr(0, 9) + ".");
@@ -77,5 +65,7 @@ void	PhoneBook::getContactList() const
 
 Contact	PhoneBook::getContactInfo(int who) const
 {
+	if (who < 0 || who >= _total)
+		return Contact();
 	return (_contacts[who]);
 }
