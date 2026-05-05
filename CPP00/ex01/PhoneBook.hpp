@@ -16,9 +16,9 @@ class PhoneBook
 		PhoneBook();
 		~PhoneBook();
 
-		void	setContact();
-		void	getContactList() const;
-		Contact	getContactInfo(int who) const;
+		void	setContact(void);
+		void	getContactList(void) const;
+		void	getContactInfo(const std::string& input) const;
 };
 
 #endif
