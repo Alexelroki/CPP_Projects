@@ -7,7 +7,7 @@ int	main(void)
 
 	while (1)
 	{
-		std::cout << "Enter command (ADD, SEARCH or EXIT): ";
+		std::cout << YELLOW << "Enter command (ADD, SEARCH or EXIT): " << RESET;
 		if (!std::getline(std::cin, command))
 			break ;
 		if (command == "ADD")
@@ -16,7 +16,7 @@ int	main(void)
 		{
 			pb.getContactList();
 			std::string	index_str;
-			std::cout << "Enter index: ";
+			std::cout << YELLOW << "Enter index: " << RESET;
 			if (std::getline(std::cin, index_str))
 				pb.getContactInfo(index_str);
 		}
