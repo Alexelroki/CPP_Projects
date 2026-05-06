@@ -7,9 +7,12 @@ static void	_getInput(std::string prompt, std::string& field)
 {
 	while (field.empty())
 	{
-		std::cout << prompt;
+		std::cout << prompt << std::flush;
 		if (!std::getline(std::cin, field))
+		{
+			std::cin.clear();
 			return ;
+		}
 		if (field.empty())
 			std::cout << "Input cannot be empty. Please try again." << std::endl;
 	}
@@ -48,18 +51,18 @@ static std::string	formatString(const std::string& str)
 
 void	PhoneBook::getContactList() const
 {
-	std::cout << "|" << std::setw(10) << "Index";
-	std::cout << "|" << std::setw(10) << "FirstName";
-	std::cout << "|" << std::setw(10) << "LastName";
-	std::cout << "|" << std::setw(10) << "Nickname" << "|" << std::endl;
+	std::cout << GREEN << "|" << std::setw(10) << "Index" << RESET;
+	std::cout << GREEN << "|" << std::setw(10) << "FirstName" << RESET;
+	std::cout << GREEN << "|" << std::setw(10) << "LastName" << RESET;
+	std::cout << GREEN << "|" << std::setw(10) << "Nickname" << "|" << RESET << std::endl;
 
 	for (int i = 0; i < _total; i++)
 	{
-		std::cout << "|" << std::setw(10) << i + 1;
-		std::cout << "|" << std::setw(10) << formatString(_contacts[i].getFirstName());
-		std::cout << "|" << std::setw(10) << formatString(_contacts[i].getLastName());
-		std::cout << "|" << std::setw(10) << formatString(_contacts[i].getNickName());
-		std::cout << "|" << std::endl;
+		std::cout << GREEN << "|" << BLUE << std::setw(10) << i + 1 << RESET;
+		std::cout << GREEN << "|" << BLUE << std::setw(10) << formatString(_contacts[i].getFirstName()) << RESET;
+		std::cout << GREEN << "|" << BLUE << std::setw(10) << formatString(_contacts[i].getLastName()) << RESET;
+		std::cout << GREEN << "|" << BLUE << std::setw(10) << formatString(_contacts[i].getNickName()) << RESET;
+		std::cout << GREEN << "|" << RESET << std::endl;
 	}
 }
 
@@ -67,7 +70,7 @@ void	PhoneBook::getContactInfo(const std::string& input) const
 {
 	if (input.length() != 1 || input[0] < '1' || input[0] > '8')
 	{
-		std::cout << "Invalid index or no contacts" << std::endl;
+		std::cout << RED << "Invalid index or no contacts" << RESET << std::endl;
 		return ;
 	}
 
@@ -75,12 +78,12 @@ void	PhoneBook::getContactInfo(const std::string& input) const
 
 	if (who >= _total)
 	{
-		std::cout << "Error: Contact #" << who << " does not exist yet." << std::endl;
+		std::cout << RED << "Error: Contact #" << who << " does not exist yet." << RESET << std::endl;
 		return ;
 	}
-	std::cout << "First name: " << _contacts[who].getFirstName() << std::endl;
-	std::cout << "Last name: " << _contacts[who].getLastName() << std::endl;
-	std::cout << "Nick name: " << _contacts[who].getNickName() << std::endl;
-	std::cout << "Phone number: " << _contacts[who].getPhoneNumber() << std::endl;
-	std::cout << "Darkest secret: " << _contacts[who].getDarkestSecret() << std::endl;
+	std::cout << BLUE << "First name: " << _contacts[who].getFirstName() << RESET << std::endl;
+	std::cout << BLUE << "Last name: " << _contacts[who].getLastName() << RESET << std::endl;
+	std::cout << BLUE << "Nick name: " << _contacts[who].getNickName() << RESET << std::endl;
+	std::cout << BLUE << "Phone number: " << _contacts[who].getPhoneNumber() << RESET << std::endl;
+	std::cout << BLUE << "Darkest secret: " << _contacts[who].getDarkestSecret() << RESET << std::endl;
 }
