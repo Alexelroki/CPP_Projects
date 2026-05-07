@@ -4,6 +4,7 @@
 # include "Contact.hpp"
 # include <iomanip>
 # include <iostream>
+# include <cstdlib>
 
 class PhoneBook
 {
@@ -17,7 +18,7 @@ class PhoneBook
 		~PhoneBook();
 
 		void	setContact(void);
-		void	getContactList(void) const;
+		int		getContactList(void) const;
 		void	getContactInfo(const std::string& input) const;
 };
 
