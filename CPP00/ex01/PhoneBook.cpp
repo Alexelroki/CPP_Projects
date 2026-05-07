@@ -10,11 +10,12 @@ static void	_getInput(std::string prompt, std::string& field)
 		std::cout << prompt << std::flush;
 		if (!std::getline(std::cin, field))
 		{
-			std::cin.clear();
-			return ;
+			std::cout << "\n" << RED << "Input cancelled." << RESET << std::endl;
+			std::cout << "\n" << YELLOW << "Goodbye!" << RESET << std::endl;
+			exit(0);
 		}
 		if (field.empty())
-			std::cout << "Input cannot be empty. Please try again." << std::endl;
+			std::cout << RED << "Input cannot be empty. Please try again." << RESET << std::endl;
 	}
 }
 
@@ -49,12 +50,21 @@ static std::string	formatString(const std::string& str)
 	return (str);
 }
 
-void	PhoneBook::getContactList() const
+int	PhoneBook::getContactList() const
 {
+	if (_total < 1)
+	{
+		std::cout << RED << "No contacts available" << RESET << std::endl;
+		std::cout << RED << "Use the \"ADD\" command to create contacts" << RESET << std::endl;
+		return (0);
+	}
+
+	std::cout << GREEN << "---------------------------------------------" << RESET << std::endl;
 	std::cout << GREEN << "|" << std::setw(10) << "Index" << RESET;
 	std::cout << GREEN << "|" << std::setw(10) << "FirstName" << RESET;
 	std::cout << GREEN << "|" << std::setw(10) << "LastName" << RESET;
 	std::cout << GREEN << "|" << std::setw(10) << "Nickname" << "|" << RESET << std::endl;
+	std::cout << GREEN << "---------------------------------------------" << RESET << std::endl;
 
 	for (int i = 0; i < _total; i++)
 	{
@@ -63,14 +73,16 @@ void	PhoneBook::getContactList() const
 		std::cout << GREEN << "|" << BLUE << std::setw(10) << formatString(_contacts[i].getLastName()) << RESET;
 		std::cout << GREEN << "|" << BLUE << std::setw(10) << formatString(_contacts[i].getNickName()) << RESET;
 		std::cout << GREEN << "|" << RESET << std::endl;
+		std::cout << GREEN << "---------------------------------------------" << RESET << std::endl;
 	}
+	return (1);
 }
 
 void	PhoneBook::getContactInfo(const std::string& input) const
 {
 	if (input.length() != 1 || input[0] < '1' || input[0] > '8')
 	{
-		std::cout << RED << "Invalid index or no contacts" << RESET << std::endl;
+		std::cout << RED << "Invalid index" << RESET << std::endl;
 		return ;
 	}
 
