@@ -3,34 +3,36 @@
 PhoneBook::PhoneBook(): _total(0), _next(0) {}
 PhoneBook::~PhoneBook() {}
 
-static void	_getInput(std::string prompt, std::string& field)
+static bool	_getInput(std::string prompt, std::string& field)
 {
-	while (field.empty())
+	if (std::cin.eof())
 	{
-		std::cout << prompt << std::flush;
-		if (!std::getline(std::cin, field))
-		{
-			std::cout << "\n" << RED << "Input cancelled." << RESET << std::endl;
-			std::cout << "\n" << YELLOW << "Goodbye!" << RESET << std::endl;
-			exit(0);
-		}
-		if (field.empty())
-			std::cout << RED << "Input cannot be empty. Please try again." << RESET << std::endl;
+		std::cout << "\n" << YELLOW << "Goodbye!" << RESET << std::endl;
+		return (false);
 	}
+	std::cout << prompt << std::flush;
+	if (!std::getline(std::cin, field))
+	{
+		std::cout << "\n" << RED << "Input cancelled." << RESET;
+		std::cout << "\n" << YELLOW << "Goodbye!" << RESET << std::endl;
+		return (false);
+	}
+	return (true);
 }
 
-void	PhoneBook::setContact()
+bool	PhoneBook::setContact()
 {
 	std::string first, last, nick, phone, darkest;
 
-	_getInput("First name: ", first);
-	_getInput("Last name: ", last);
-	_getInput("Nick name: ", nick);
-	_getInput("Phone number: ", phone);
-	_getInput("Darkest secret: ", darkest);
+	if (!_getInput("First name: ", first)
+	|| !_getInput("Last name: ", last)
+	|| !_getInput("Nick name: ", nick)
+	|| !_getInput("Phone number: ", phone)
+	|| !_getInput("Darkest secret: ", darkest))
+		return (false);
 
 	if (first.empty() || last.empty() || nick.empty() || phone.empty() || darkest.empty())
-		return ;
+		return (false);
 
 	_contacts[_next].setFirstName(first);
 	_contacts[_next].setLastName(last);
@@ -41,6 +43,7 @@ void	PhoneBook::setContact()
 	_next = (_next + 1) % 8;
 	if (_total < 8)
 		_total += 1;
+	return (true);
 }
 
 static std::string	formatString(const std::string& str)
