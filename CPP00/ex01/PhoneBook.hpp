@@ -6,6 +6,8 @@
 # include <iostream>
 # include <cstdlib>
 
+void	bye(void);
+
 class PhoneBook
 {
 	private:
