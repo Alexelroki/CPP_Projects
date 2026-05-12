@@ -3,18 +3,72 @@
 PhoneBook::PhoneBook(): _total(0), _next(0) {}
 PhoneBook::~PhoneBook() {}
 
+/* void	PhoneBook::clear()
+{
+	for (int i = 0; i < 8; i++)
+		_contacts[i].clear();
+	_total = 0;
+	_next = 0;
+} */
+
+void	bye()
+{
+	std::cout << "\n" << RED << "Input cancelled." << RESET;
+	std::cout << "\n" << YELLOW << "Goodbye!" << RESET << std::endl;
+}
+
+static bool	_isValidPhone(const std::string& phone)
+{
+	if (phone.length() < 7 || phone.length() > 15)
+		return (false);
+	for (size_t i = 0; i < phone.length(); i++)
+	{
+		if (!std::isdigit(phone[i]))
+			return (false);
+	}
+	return (true);
+}
+
 static bool	_getInput(std::string prompt, std::string& field)
 {
-	if (std::cin.eof())
+	while (true)
 	{
-		std::cout << "\n" << YELLOW << "Goodbye!" << RESET << std::endl;
+		if (std::cin.eof())
+		{
+			bye();
+			return (false);
+		}
+		std::cout << prompt << std::flush;
+		if (!std::getline(std::cin, field))
+		{
+			bye();
+			return (false);
+		}
+		if (!field.empty())
+			break ;
+		std::cout << RED << "Input cannot be empty. Please try again." << RESET << std::endl;
+	}
+	return (true);
+}
+
+static bool	_check(int i, std::string info)
+{
+	if (i < 3 && info.length() > 15)
+	{
+		std::cout << RED << "Input fields have maximum length limits: " << RESET << std::endl;
+		std::cout << RED << "First name, Last name, Nick name: 15 characters." << RESET << std::endl;
 		return (false);
 	}
-	std::cout << prompt << std::flush;
-	if (!std::getline(std::cin, field))
+	else if (i == 3 && !_isValidPhone(info))
 	{
-		std::cout << "\n" << RED << "Input cancelled." << RESET;
-		std::cout << "\n" << YELLOW << "Goodbye!" << RESET << std::endl;
+		if (std::cin.eof())
+			return (false);
+		std::cout << RED << "Invalid phone number. Try again.\nPhone number must have more than 7 and less than 15 digits." << RESET << std::endl;
+		return (false);
+	}
+	else if (i == 4 && info.length() > 255)
+	{
+		std::cout << RED << "Darkest secret: 255 characters." << RESET << std::endl;
 		return (false);
 	}
 	return (true);
@@ -22,23 +76,22 @@ static bool	_getInput(std::string prompt, std::string& field)
 
 bool	PhoneBook::setContact()
 {
-	std::string first, last, nick, phone, darkest;
+	std::string	info[5];
+	const char*	prompts[5] = {"First name: ", "Last name: ", "Nick name: ", "Phone number: ", "Darkest secret: "};
 
-	if (!_getInput("First name: ", first)
-	|| !_getInput("Last name: ", last)
-	|| !_getInput("Nick name: ", nick)
-	|| !_getInput("Phone number: ", phone)
-	|| !_getInput("Darkest secret: ", darkest))
-		return (false);
+	for (int i = 0; i < 5; i++)
+	{
+		if (!_getInput(prompts[i], info[i]))
+			return (false);
+		if (!_check(i, info[i]))
+			i--;
+	}
 
-	if (first.empty() || last.empty() || nick.empty() || phone.empty() || darkest.empty())
-		return (false);
-
-	_contacts[_next].setFirstName(first);
-	_contacts[_next].setLastName(last);
-	_contacts[_next].setNickName(nick);
-	_contacts[_next].setPhoneNumber(phone);
-	_contacts[_next].setDarkestSecret(darkest);
+	_contacts[_next].setFirstName(info[0]);
+	_contacts[_next].setLastName(info[1]);
+	_contacts[_next].setNickName(info[2]);
+	_contacts[_next].setPhoneNumber(info[3]);
+	_contacts[_next].setDarkestSecret(info[4]);
 
 	_next = (_next + 1) % 8;
 	if (_total < 8)
@@ -85,7 +138,7 @@ void	PhoneBook::getContactInfo(const std::string& input) const
 {
 	if (input.length() != 1 || input[0] < '1' || input[0] > '8')
 	{
-		std::cout << RED << "Invalid index" << RESET << std::endl;
+		std::cout << RED << "Invalid index." << RESET << std::endl;
 		return ;
 	}
 
@@ -93,7 +146,7 @@ void	PhoneBook::getContactInfo(const std::string& input) const
 
 	if (who >= _total)
 	{
-		std::cout << RED << "Error: Contact #" << who << " does not exist yet." << RESET << std::endl;
+		std::cout << RED << "Error: Contact #" << input[0] << " does not exist yet." << RESET << std::endl;
 		return ;
 	}
 	std::cout << BLUE << "First name: " << _contacts[who].getFirstName() << RESET << std::endl;
