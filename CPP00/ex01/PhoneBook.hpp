@@ -20,8 +20,8 @@ class PhoneBook
 		~PhoneBook();
 
 		bool	setContact(void);
-		int		getContactList(void) const;
-		void	getContactInfo(const std::string& input) const;
+		bool	getContactList(void) const;
+		bool	getContactInfo(const std::string& input) const;
 };
 
 #endif
