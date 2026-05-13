@@ -22,18 +22,25 @@ int	main(int argc, char **argv)
 		if (command == "ADD")
 		{
 			if (!pb.setContact())
-				break;
-		}
-		else if (command == "SEARCH" && pb.getContactList())
-		{
-			std::string	index_str;
-			std::cout << YELLOW << "Enter index: " << RESET;
-			if (!std::getline(std::cin, index_str) || std::cin.eof())
-			{
-				bye();
 				break ;
+		}
+		else if (command == "SEARCH")
+		{
+			if (pb.getContactList())
+			{
+				while (true)
+				{
+					std::string	index_str;
+					std::cout << YELLOW << "Enter index: " << RESET;
+					if (!std::getline(std::cin, index_str) || std::cin.eof())
+					{
+						bye();
+						break ;
+					}
+					if (pb.getContactInfo(index_str))
+						break ;
+				}
 			}
-			pb.getContactInfo(index_str);
 		}
 		else if (command == "EXIT")
 			break ;
