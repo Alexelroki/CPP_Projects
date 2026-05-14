@@ -3,14 +3,6 @@
 PhoneBook::PhoneBook(): _total(0), _next(0) {}
 PhoneBook::~PhoneBook() {}
 
-/* void	PhoneBook::clear()
-{
-	for (int i = 0; i < 8; i++)
-		_contacts[i].clear();
-	_total = 0;
-	_next = 0;
-} */
-
 void	bye()
 {
 	std::cout << "\n" << RED << "Input cancelled." << RESET;
@@ -48,25 +40,57 @@ static bool	_getInput(std::string prompt, std::string& field)
 	return (true);
 }
 
-static size_t	getCharWidth(unsigned char c)
+static int	getCharInfo(const std::string& str, size_t i, size_t& bytes)
 {
+	unsigned char	c = str[i];
+	int				cp;
+
+	if ((c & 0x80) == 0)
+	{
+		bytes = 1;
+		return (1);
+	}
+	if ((c & 0xE0) == 0xC0)
+	{
+		bytes = 2;
+		return (1);
+	}
+	if ((c & 0xF0) == 0xE0)
+	{
+		bytes = 3;
+		if (i + 2 < str.length())
+		{
+			cp = ((c & 0x0F) << 12) | ((str[i + 1] & 0x3F) << 6) | (str[i + 2] & 0x3F);
+			if ((cp >= 0x1100 && cp <= 0x11FF) || (cp >= 0x2E80 && cp <= 0xA4CF) ||
+				(cp >= 0xAC00 && cp <= 0xD7AF) || (cp >= 0xF900 && cp <= 0xFAFF))
+				return (2);
+		}
+		return (1);
+	}
 	if ((c & 0xF8) == 0xF0)
+	{
+		bytes = 4;
 		return (2);
-	if ((c & 0xC0) == 0x80)
-		return (0);
-	return (1);
+	}
+	bytes = 1;
+	return (0);
 }
 
 static size_t	countVisualChars(const std::string& str)
 {
 	size_t	total = 0;
+	size_t	i = 0;
 
-	for (size_t i = 0; i < str.length(); i++)
-		total += getCharWidth(str[i]);
+	while (i < str.length())
+	{
+		size_t	bytes;
+		total += getCharInfo(str, i, bytes);
+		i += bytes;
+	}
 	return (total);
 }
 
-static bool	_check(int i, std::string info)
+static bool	_check(int i, const std::string& info)
 {
 	if (i < 3 && countVisualChars(info) > 15)
 	{
@@ -126,12 +150,13 @@ static std::string	formatString(const std::string& str)
 
 	while (i < str.length())
 	{
-		size_t w = getCharWidth(str[i]);
+		size_t	bytes;
+		size_t	w = getCharInfo(str, i, bytes);
 		if (width + w > 9)
 			break ;
 		width += w;
-		i++;
 		cut = i;
+		i += bytes;
 	}
 
 	std::string	res = str.substr(0, cut) + ".";
