@@ -35,7 +35,7 @@ int	main(int argc, char **argv)
 					if (!std::getline(std::cin, index_str) || std::cin.eof())
 					{
 						bye();
-						break ;
+						return (0);
 					}
 					if (pb.getContactInfo(index_str))
 						break ;
