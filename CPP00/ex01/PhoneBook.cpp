@@ -18,6 +18,17 @@ static bool	_isValidPhone(const std::string& phone)
 	return (true);
 }
 
+static bool	_isASCII(const std::string& str)
+{
+	for (size_t i = 0; i < str.length(); ++i)
+	{
+		unsigned char c = str[i];
+		if (c > 127)
+			return (false);
+	}
+	return (true);
+}
+
 static bool	_getInput(std::string prompt, std::string& field)
 {
 	while (true)
@@ -33,90 +44,46 @@ static bool	_getInput(std::string prompt, std::string& field)
 			bye();
 			return (false);
 		}
-		if (!field.empty())
-			break ;
-		std::cout << RED << "Input cannot be empty. Please try again." << RESET << std::endl;
+		if (field.empty())
+		{
+			std::cout << RED << "Input cannot be empty. Please try again." << RESET << std::endl;
+			continue ;
+		}
+		if (!_isASCII(field))
+		{
+			std::cout << RED << "Only ASCII characters allowed. Please try again." << RESET << std::endl;
+			continue ;
+		}
+		break ;
 	}
 	return (true);
 }
 
-static int	getCharInfo(const std::string& str, size_t i, size_t& bytes)
+static bool	_isOnlyLetters(const std::string& str)
 {
-	unsigned char	c = str[i];
-	int				cp;
-
-	// Miramos el primer bit, si es 0, es una letra inglesa normal, ocupa 1 espacio
-	// 0x80 = 1000 0000
-	if ((c & 0x80) == 0)
+	for (size_t i = 0; i < str.length(); ++i)
 	{
-		bytes = 1;
-		return (1);
+		if (!isalpha(str[i]) && str[i] != ' ')
+			return (false);
 	}
-	// Miramos los tres primeros bits, si es 110, ocupa 2 bytes pero solo 1 espacio (p.ej. ñ, á, ...)
-	// 0xE0 = 1110 0000
-	// 0xC0 = 1100 0000
-	if ((c & 0xE0) == 0xC0)
-	{
-		bytes = 2;
-		return (1);
-	}
-	// Miramos los cuatro primeros bits, si es 1110, ocupa 2 bytes, pero puede ocupar 1 o 2 espacios
-	// 0xF0 = 1111 0000
-	// 0xE0 = 1110 0000
-	if ((c & 0xF0) == 0xE0)
-	{
-		// Tenemos que fusionar los 3 bytes para ver el número real de la letra (Code Point).
-		bytes = 3;
-		if (i + 2 < str.length()) // Comprobación de seguridad (¿Existen los siguientes dos bytes?)
-		{
-			// Extraemos los bits que no son de control
-			// 0x0F = 0000 1111 - Conserva 4 ultimos bits del primer byte
-			// 0x3F = 0011 1111 - Conserva 6 ultimos bits del segundo y tercer byte
-			// 4 + 6 + 6 = 16 bits
-			// Coges los 4 primeros, los mueves 12 posiciones a la izquierda, ahora te quedan
-			// 12 posiciones libres a la derecha, metes 6 y 6 de los otros dos bytes
-			// Estamos leyendo UTF-8, pero calculando su valor Unicode real (Code Point) en la RAM.
-			cp = ((c & 0x0F) << 12) | ((str[i + 1] & 0x3F) << 6) | (str[i + 2] & 0x3F);
-			if ((cp >= 0x1100 && cp <= 0x11FF) || (cp >= 0x2E80 && cp <= 0xA4CF) ||
-				(cp >= 0xAC00 && cp <= 0xD7AF) || (cp >= 0xF900 && cp <= 0xFAFF))
-				return (2);
-		}
-		return (1);
-	}
-	// Miramos los cinco primeros bits, si es 1111 0, ocupa 4 bytes, pero puede ocupar 1 o 2 espacios
-	// 0xF0 = 1111 0000
-	// 0xE0 = 1110 0000
-	if ((c & 0xF8) == 0xF0)
-	{
-		bytes = 4;
-		return (2);
-	}
-	// Por robustez frente a textos corruptos o bytes extraños, se lo salta y lo ignora.
-	bytes = 1;
-	return (0);
-}
-
-static size_t	countVisualChars(const std::string& str)
-{
-	size_t	total = 0;
-	size_t	i = 0;
-
-	while (i < str.length())
-	{
-		size_t	bytes;
-		total += getCharInfo(str, i, bytes);
-		i += bytes;
-	}
-	return (total);
+	return (true);
 }
 
 static bool	_check(int i, const std::string& info)
 {
-	if (i < 3 && countVisualChars(info) > 15)
+	if (i < 3)
 	{
-		std::cout << RED << "Input fields have maximum length limits: " << RESET << std::endl;
-		std::cout << RED << "First name, Last name, Nick name: 15 characters." << RESET << std::endl;
-		return (false);
+		if (i < 2 && !_isOnlyLetters(info))
+		{
+			std::cout << RED << "First name and last name must receive just letters." << RESET << std::endl;
+			return (false);
+		}
+		if (info.length() > 15)
+		{
+			std::cout << RED << "Input fields have maximum length limits: " << RESET << std::endl;
+			std::cout << RED << "First name, Last name, Nick name: 15 characters." << RESET << std::endl;
+			return (false);
+		}
 	}
 	else if (i == 3 && !_isValidPhone(info))
 	{
@@ -125,7 +92,7 @@ static bool	_check(int i, const std::string& info)
 		std::cout << RED << "Invalid phone number. Try again.\nPhone number must have more than 7 and less than 15 digits." << RESET << std::endl;
 		return (false);
 	}
-	else if (i == 4 && countVisualChars(info) > 255)
+	else if (i == 4 && info.length() > 255)
 	{
 		std::cout << RED << "Darkest secret: 255 characters." << RESET << std::endl;
 		return (false);
@@ -160,27 +127,9 @@ bool	PhoneBook::setContact()
 
 static std::string	formatString(const std::string& str)
 {
-	size_t	i = 0;
-	size_t	width = 0;
-	size_t	cut = 0;
-	size_t	totalW = countVisualChars(str);
-
-	if (totalW <= 10)
-		return (std::string(10 - totalW, ' ') + str);
-
-	while (i < str.length())
-	{
-		size_t	bytes;
-		size_t	w = getCharInfo(str, i, bytes);
-		if (width + w > 9)
-			break ;
-		width += w;
-		cut = i;
-		i += bytes;
-	}
-
-	std::string	res = str.substr(0, cut) + ".";
-	return (std::string(10 - countVisualChars(res), ' ') + res);
+	if (str.length() <= 10)
+		return (str);
+	return (str.substr(0, 9) + ".");
 }
 
 bool	PhoneBook::getContactList() const
@@ -202,9 +151,9 @@ bool	PhoneBook::getContactList() const
 	for (int i = 0; i < _total; i++)
 	{
 		std::cout << GREEN << "|" << BLUE << std::setw(10) << i + 1 << RESET;
-		std::cout << GREEN << "|" << BLUE << formatString(_contacts[i].getFirstName()) << RESET;
-		std::cout << GREEN << "|" << BLUE << formatString(_contacts[i].getLastName()) << RESET;
-		std::cout << GREEN << "|" << BLUE << formatString(_contacts[i].getNickName()) << RESET;
+		std::cout << GREEN << "|" << BLUE << std::setw(10) << formatString(_contacts[i].getFirstName()) << RESET;
+		std::cout << GREEN << "|" << BLUE << std::setw(10) << formatString(_contacts[i].getLastName()) << RESET;
+		std::cout << GREEN << "|" << BLUE << std::setw(10) << formatString(_contacts[i].getNickName()) << RESET;
 		std::cout << GREEN << "|" << RESET << std::endl;
 		std::cout << GREEN << "---------------------------------------------" << RESET << std::endl;
 	}
