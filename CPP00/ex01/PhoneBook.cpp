@@ -45,21 +45,37 @@ static int	getCharInfo(const std::string& str, size_t i, size_t& bytes)
 	unsigned char	c = str[i];
 	int				cp;
 
+	// Miramos el primer bit, si es 0, es una letra inglesa normal, ocupa 1 espacio
+	// 0x80 = 1000 0000
 	if ((c & 0x80) == 0)
 	{
 		bytes = 1;
 		return (1);
 	}
+	// Miramos los tres primeros bits, si es 110, ocupa 2 bytes pero solo 1 espacio (p.ej. ñ, á, ...)
+	// 0xE0 = 1110 0000
+	// 0xC0 = 1100 0000
 	if ((c & 0xE0) == 0xC0)
 	{
 		bytes = 2;
 		return (1);
 	}
+	// Miramos los cuatro primeros bits, si es 1110, ocupa 2 bytes, pero puede ocupar 1 o 2 espacios
+	// 0xF0 = 1111 0000
+	// 0xE0 = 1110 0000
 	if ((c & 0xF0) == 0xE0)
 	{
+		// Tenemos que fusionar los 3 bytes para ver el número real de la letra (Code Point).
 		bytes = 3;
-		if (i + 2 < str.length())
+		if (i + 2 < str.length()) // Comprobación de seguridad (¿Existen los siguientes dos bytes?)
 		{
+			// Extraemos los bits que no son de control
+			// 0x0F = 0000 1111 - Conserva 4 ultimos bits del primer byte
+			// 0x3F = 0011 1111 - Conserva 6 ultimos bits del segundo y tercer byte
+			// 4 + 6 + 6 = 16 bits
+			// Coges los 4 primeros, los mueves 12 posiciones a la izquierda, ahora te quedan
+			// 12 posiciones libres a la derecha, metes 6 y 6 de los otros dos bytes
+			// Estamos leyendo UTF-8, pero calculando su valor Unicode real (Code Point) en la RAM.
 			cp = ((c & 0x0F) << 12) | ((str[i + 1] & 0x3F) << 6) | (str[i + 2] & 0x3F);
 			if ((cp >= 0x1100 && cp <= 0x11FF) || (cp >= 0x2E80 && cp <= 0xA4CF) ||
 				(cp >= 0xAC00 && cp <= 0xD7AF) || (cp >= 0xF900 && cp <= 0xFAFF))
@@ -67,11 +83,15 @@ static int	getCharInfo(const std::string& str, size_t i, size_t& bytes)
 		}
 		return (1);
 	}
+	// Miramos los cinco primeros bits, si es 1111 0, ocupa 4 bytes, pero puede ocupar 1 o 2 espacios
+	// 0xF0 = 1111 0000
+	// 0xE0 = 1110 0000
 	if ((c & 0xF8) == 0xF0)
 	{
 		bytes = 4;
 		return (2);
 	}
+	// Por robustez frente a textos corruptos o bytes extraños, se lo salta y lo ignora.
 	bytes = 1;
 	return (0);
 }
