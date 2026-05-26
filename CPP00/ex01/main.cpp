@@ -1,4 +1,9 @@
 #include "PhoneBook.hpp"
+#include <iostream>
+
+#define RESET		"\033[0m"
+#define RED			"\033[31m"
+#define YELLOW		"\033[33m"
 
 int	main(int argc, char **argv)
 {
@@ -43,7 +48,10 @@ int	main(int argc, char **argv)
 			}
 		}
 		else if (command == "EXIT")
+		{
+			std::cout << YELLOW << "Goodbye!" << RESET << std::endl;
 			break ;
+		}
 		else
 			std::cout << RED << "Invalid command." << RESET << std::endl;
 	}
