@@ -1,4 +1,15 @@
 #include "PhoneBook.hpp"
+#include <iostream>
+#include <iomanip>
+#include <cstdlib>
+#include <cctype>
+
+#define RESET		"\033[0m"
+#define RED			"\033[31m"
+#define GREEN		"\033[32m"
+#define YELLOW		"\033[33m"
+#define BLUE		"\033[34m"
+
 
 PhoneBook::PhoneBook(): _total(0), _next(0) {}
 PhoneBook::~PhoneBook() {}
