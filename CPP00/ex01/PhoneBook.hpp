@@ -2,9 +2,7 @@
 # define PHONEBOOK_HPP
 
 # include "Contact.hpp"
-# include <iomanip>
-# include <iostream>
-# include <cstdlib>
+# include <string>
 
 void	bye(void);
 
