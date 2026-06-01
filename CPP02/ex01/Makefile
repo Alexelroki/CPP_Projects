@@ -1,4 +1,4 @@
-NAME = fixed
+NAME = fixed_useful
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
