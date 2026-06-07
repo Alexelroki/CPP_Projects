@@ -1,3 +1,6 @@
+#include "DiamondTrap.hpp"
+#include <iostream>
+
 DiamondTrap::DiamondTrap( void )
 	: ClapTrap("Default_clap_name"), ScavTrap(), FragTrap(), _name("Default")
 {
@@ -17,9 +20,8 @@ DiamondTrap::DiamondTrap( const std::string& name )
 }
 
 DiamondTrap::DiamondTrap( const DiamondTrap& other )
-	: ClapTrap(other), ScavTrap(other), FragTrap(other)
+	: ClapTrap(other), ScavTrap(other), FragTrap(other), _name(other._name)
 {
-	*this = other;
 	std::cout << "DiamondTrap copy constructor called" << std::endl;
 }
 
@@ -39,11 +41,15 @@ DiamondTrap::~DiamondTrap( void )
 	std::cout << "DiamondTrap destructor called" << std::endl;
 }
 
-// We need to choose the FragTrap implementation
+// We need to choose the ScavTrap implementation
 void	DiamondTrap::attack( const std::string& target )
 {
 	ScavTrap::attack(target);
 }
 
 // DiamondTrap special capability
-void	DiamondTrap::whoAmI( void );
+void	DiamondTrap::whoAmI( void )
+{
+	std::cout << "My DiamondTrap name is: " << this->_name << std::endl;
+	std::cout << "My ClapTrap name is: " << ClapTrap::_name << std::endl;
+}
