@@ -26,6 +26,7 @@ int main( void )
 	std::cout << "\n--- DEAD TEST ---" << std::endl;
 	ClapTrap	fragile("Porcellaneous");
 	fragile.takeDamage(15); // Receives more damage than the life he has
+
 	std::cout << "\n--- THIS SHOULDN'T WORK ---" << std::endl;
 	fragile.attack("someone"); // It shouldn't be able to do anything
 	fragile.beRepaired(2);
