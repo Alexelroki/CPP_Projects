@@ -50,6 +50,14 @@ void	DiamondTrap::attack( const std::string& target )
 // DiamondTrap special capability
 void	DiamondTrap::whoAmI( void )
 {
+	if (this->_hitPoints == 0 || this->_energyPoints == 0)
+	{
+		std::cout
+		<< "DiamondTrap " << this->_name
+		<< " cannot state its identity because it has no HP or energy left!"
+		<< std::endl;
+		return ;
+	}
 	std::cout << "My DiamondTrap name is: " << this->_name << std::endl;
 	std::cout << "My ClapTrap name is: " << ClapTrap::_name << std::endl;
 }
