@@ -101,7 +101,7 @@ void	ClapTrap::beRepaired( unsigned int amount )
 	this->_hitPoints += amount;
 	std::cout
 	<< "ClapTrap " << this->_name
-	<< " repairs itself, regaining "
-	<< amount << " hit points! Current HP: " << this->_hitPoints
+	<< " repairs itself, regaining " << amount
+	<< " hit points! Current HP: " << this->_hitPoints
 	<< std::endl;
 }
