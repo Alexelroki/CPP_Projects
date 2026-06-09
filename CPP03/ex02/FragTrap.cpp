@@ -45,5 +45,13 @@ FragTrap::~FragTrap( void )
 // Special ability
 void FragTrap::highFivesGuys( void )
 {
+	if (this->_hitPoints == 0 || this->_energyPoints == 0)
+	{
+		std::cout
+		<< "FragTrap " << this->_name
+		<< " cannot request anything because it has no HP or energy left!"
+		<< std::endl;
+		return ;
+	}
 	std::cout << "FragTrap " << this->_name << " requests a positive high five! 🖐️" << std::endl;
 }
