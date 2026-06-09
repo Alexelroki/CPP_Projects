@@ -13,15 +13,22 @@ int main( void )
 	
 	std::cout << "\n--- ENERGY TEST ---" << std::endl;
 	// Already spent 2 energy (1 attack + 1 repair). 8 remain.
-	for (int i = 0; i < 9; i++)
+	for (int i = 1; i <= 8; i++)
 	{
+		std::cout << i << ". ";
 		clap.attack("an enemy");
 	}
+
+	std::cout << "\n--- THIS SHOULDN'T WORK ---" << std::endl;
+	clap.attack("an enemy");
+	clap.beRepaired(100);
 
 	std::cout << "\n--- DEAD TEST ---" << std::endl;
 	ClapTrap	fragile("Porcellaneous");
 	fragile.takeDamage(15); // Receives more damage than the life he has
+	std::cout << "\n--- THIS SHOULDN'T WORK ---" << std::endl;
 	fragile.attack("someone"); // It shouldn't be able to do anything
+	fragile.beRepaired(2);
 
 	std::cout << "\n---🚨 AUTODESTRUCTION 🚨 ---" << std::endl;
 	return (0);
