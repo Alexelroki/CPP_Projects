@@ -47,16 +47,31 @@ void ScavTrap::attack( const std::string& target )
 {
 	if (this->_hitPoints == 0 || this->_energyPoints == 0)
 	{
-		std::cout << "ScavTrap " << this->_name << " cannot attack because it has no HP or energy left!" << std::endl;
+		std::cout <<
+		"ScavTrap " << this->_name
+		<< " cannot attack because it has no HP or energy left!"
+		<< std::endl;
 		return;
 	}
 	this->_energyPoints--;
-	std::cout << "ScavTrap " << this->_name << " fiercely attacks " << target 
-			  << ", dealing " << this->_attackDamage << " points of damage!" << std::endl;
+	std::cout
+	<< "ScavTrap " << this->_name
+	<< " fiercely attacks " << target
+	<< ", dealing " << this->_attackDamage
+	<< " points of damage!"
+	<< std::endl;
 }
 
 // Unique capability
 void ScavTrap::guardGate( void )
 {
+	if (this->_hitPoints == 0 || this->_energyPoints == 0)
+	{
+		std::cout
+		<< "ScavTrap " << this->_name
+		<< " cannot enter Gate keeper mode because it has no HP or energy left!"
+		<< std::endl;
+		return ;
+	}
 	std::cout << "ScavTrap " << this->_name << " is now in Gate keeper mode." << std::endl;
 }
