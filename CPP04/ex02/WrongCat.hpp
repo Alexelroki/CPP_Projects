@@ -2,6 +2,7 @@
 # define WRONGCAT_HPP
 
 #include "WrongAnimal.hpp"
+#include "Brain.hpp"
 
 class WrongCat : public WrongAnimal
 {
@@ -12,6 +13,9 @@ class WrongCat : public WrongAnimal
 		~WrongCat( void );
 
 		void		makeSound( void ) const;
+
+	private:
+		Brain*	_brain;
 };
 
 #endif
