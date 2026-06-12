@@ -63,17 +63,17 @@ int main()
 	// =========================================================================
 	// 4. EXTRA REQUIRED TESTS
 	// =========================================================================
-	std::cout << "\n--- EXTRA TEST: WRONG ANIMAL POLYMORPHISM COMPARISON ---" << std::endl;
-	{
-		std::cout << "-> Creating a WrongCat inside a WrongAnimal* pointer:" << std::endl;
-		WrongAnimal* wrong = new WrongCat();
+	// std::cout << "\n--- EXTRA TEST: WRONG ANIMAL POLYMORPHISM COMPARISON ---" << std::endl;
+	// {
+	// 	std::cout << "-> Creating a WrongCat inside a WrongAnimal* pointer:" << std::endl;
+	// 	WrongAnimal* wrong = new WrongCat();
 
-		std::cout << "-> Non-polymorphic sound check: ";
-		wrong->makeSound(); // Prints WrongAnimal sound because it lacks 'virtual'
+	// 	std::cout << "-> Non-polymorphic sound check: ";
+	// 	wrong->makeSound(); // Prints WrongAnimal sound because it lacks 'virtual'
 
-		std::cout << "-> Deallocating via WrongAnimal* pointer:" << std::endl;
-		delete wrong; // WrongCat destructor is NEVER called here!
-	}
+	// 	std::cout << "-> Deallocating via WrongAnimal* pointer:" << std::endl;
+	// 	delete wrong; // WrongCat destructor is NEVER called here!
+	// }
 
 	// =========================================================================
 	// ABSTRACT CLASS INSTANTIATION TEST (The core purpose of Ex02)
