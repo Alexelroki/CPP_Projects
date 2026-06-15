@@ -12,7 +12,7 @@ class MateriaSource : public IMateriaSource
 		// Orthodox Canonical Form
 		MateriaSource( void );
 		MateriaSource( const MateriaSource& other );
-		MateriaSource	operator=( const MateriaSource& other );
+		MateriaSource&	operator=( const MateriaSource& other );
 		~MateriaSource( void );
 
 		// Contract Funtions
