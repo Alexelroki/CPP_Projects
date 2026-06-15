@@ -9,7 +9,7 @@ AMateria&	AMateria::operator=( const AMateria& other )
 {
 	if (this != &other)
 	{
-		this->_type = other._type
+		this->_type = other._type;
 	}
 	return (*this);
 }
