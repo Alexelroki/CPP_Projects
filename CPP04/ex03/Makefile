@@ -2,8 +2,8 @@ NAME = interface
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
-HEADERS = AMateria.hpp Ice.hpp
-SRCS = AMateria.cpp  Ice.cpp
+HEADERS = AMateria.hpp Cure.hpp ICharacter.hpp MateriaSource.hpp Character.hpp Ice.hpp IMateriaSource.hpp
+SRCS = AMateria.cpp Character.cpp Cure.cpp Ice.cpp main.cpp MateriaSource.cpp
 
 OBJ_DIR = obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
