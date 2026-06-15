@@ -11,7 +11,7 @@ class Character : public ICharacter
 		// Orthodox Canonical Form
 		Character( const std::string& name );
 		Character( const Character& other );
-		Character	operator=( const Character& other );
+		Character&	operator=( const Character& other );
 		virtual ~Character( void );
 
 		// Contract rules
