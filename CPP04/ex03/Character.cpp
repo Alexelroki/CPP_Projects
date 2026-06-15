@@ -13,7 +13,7 @@ Character::Character( const Character& other ) : _name(other._name)
 {
 	for (int i = 0; i < 4; i++)
 	{
-		if (other._inventory != NULL)
+		if (other._inventory[i] != NULL)
 			this->_inventory[i] = other._inventory[i]->clone();
 		else
 			this->_inventory[i] = NULL;
@@ -37,7 +37,7 @@ Character&	Character::operator=( const Character& other )
 	return (*this);
 }
 
-virtual Character::~Character( void )
+Character::~Character( void )
 {
 	for (int i = 0; i < 4; i++)
 	{
@@ -77,6 +77,9 @@ void				Character::use(int idx, ICharacter& target)
 {
 	if (idx >= 0 && idx < 4 && this->_inventory[idx])
 	{
-		this->_inventory[idx]->use(target);
+		if (this->_inventory[idx] != NULL)
+		{
+			this->_inventory[idx]->use(target);
+		}
 	}
 }
