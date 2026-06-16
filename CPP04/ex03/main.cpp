@@ -5,29 +5,57 @@
 #include "MateriaSource.hpp"
 #include <iostream>
 
-int main(void)
+// I DO NOT RECOMMEND USING THIS MAIN (bad practice / memory leaks)
+/*int main(void)
 {
-    std::cout << "--- 1. MANDATORY SUBJECT TESTS ---" << std::endl;
-    IMateriaSource* src = new MateriaSource();
+    std::cout << "--- 1. MANDATORY SUBJECT TESTS (with Memory Leaks) ---" << std::endl;
+    IMateriaSource*	src = new MateriaSource();
     src->learnMateria(new Ice());
     src->learnMateria(new Cure());
 
-    ICharacter* me = new Character("me");
+    ICharacter*	me = new Character("me");
+
     AMateria* tmp;
-    
     tmp = src->createMateria("ice");
     me->equip(tmp);
     tmp = src->createMateria("cure");
     me->equip(tmp);
 
     ICharacter* bob = new Character("bob");
-    
+
     me->use(0, *bob);
     me->use(1, *bob);
 
+	delete bob;
+	delete me;
+    delete src;
+
+	return 0;
+}*/
+
+int main(void)
+{
+    std::cout << "--- 1. MY OWN TESTS (Responsible Memory Management) ---" << std::endl;
+
+	// Initialize the necessary core objects for our tests
+	IMateriaSource*	src = new MateriaSource();
+	Character*		bob = new Character("Bob");
+	AMateria*		tmp;
+
+	// Responsible approach: main creates, main deletes
+	AMateria*		iceTemplate = new Ice();
+	src->learnMateria(iceTemplate);
+	delete iceTemplate;
+
+	AMateria*		cureTemplate = new Cure();
+	src->learnMateria(cureTemplate);
+	delete cureTemplate;
+
+	/////////////////////////////////////////////////////////////////////////////
+
     std::cout << "\n--- 2. DEEP COPY TEST (COPY CONSTRUCTOR) ---" << std::endl;
     // Create an original character and equip a materia
-    Character* original = new Character("Original");
+    Character*		original = new Character("Original");
     tmp = src->createMateria("ice");
     original->equip(tmp);
 
@@ -47,7 +75,10 @@ int main(void)
     clone->use(0, *bob); // If it wasn't a deep copy, this would Segfault
     delete clone;
 
+	/////////////////////////////////////////////////////////////////////////////
+
     std::cout << "\n--- 3. DEEP COPY TEST (ASSIGNMENT OPERATOR) ---" << std::endl;
+	// Create mages
     Character* mage1 = new Character("Mage1");
     tmp = src->createMateria("cure");
     mage1->equip(tmp); // Mage1 starts with Cure
@@ -65,7 +96,9 @@ int main(void)
     std::cout << "After assignment, Mage2 uses slot 0: ";
     mage2->use(0, *bob);
 
-    std::cout << "\n--- 4. EDGE CASES (FULL INVENTORY / INVALID INDICES) ---" << std::endl;
+	/////////////////////////////////////////////////////////////////////////////
+
+	std::cout << "\n--- 4. EDGE CASES (FULL INVENTORY / INVALID INDICES) ---" << std::endl;
     // Using empty or out-of-bounds slots should safely do nothing
     mage1->use(3, *bob);
     mage1->use(-1, *bob);
@@ -74,11 +107,10 @@ int main(void)
 	mage1->use(0, *bob); // Everything works good
 
     // Final memory cleanup
-	delete me;
     delete mage1;
     delete mage2;
-    delete bob;
-    delete src;
+	delete src;
+	delete bob;
 
 	std::cout << "\n--- PROGRAM FINISHED SUCCESSFULLY ---" << std::endl;
 
