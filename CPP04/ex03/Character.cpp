@@ -46,12 +46,12 @@ Character::~Character( void )
 	}
 }
 
-const std::string&	Character::getName() const
+const std::string&	Character::getName( void ) const
 {
 	return (this->_name);
 }
 
-void				Character::equip(AMateria* m)
+void				Character::equip( AMateria* m )
 {
 	if (!m)
 		return ;
@@ -65,7 +65,7 @@ void				Character::equip(AMateria* m)
 	}
 }
 
-void				Character::unequip(int idx)
+void				Character::unequip( int idx )
 {
 	if (idx >= 0 && idx < 4)
 	{
@@ -73,13 +73,17 @@ void				Character::unequip(int idx)
 	}
 }
 
-void				Character::use(int idx, ICharacter& target)
+void				Character::use( int idx, ICharacter& target )
 {
 	if (idx >= 0 && idx < 4 && this->_inventory[idx])
 	{
-		if (this->_inventory[idx] != NULL)
-		{
 			this->_inventory[idx]->use(target);
-		}
 	}
+}
+
+AMateria*			Character::getMateria( int idx ) const
+{
+	if (idx >= 0 && idx < 4)
+		return (this->_inventory[idx]);
+	return (NULL);
 }

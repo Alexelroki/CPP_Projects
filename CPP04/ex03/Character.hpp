@@ -3,7 +3,6 @@
 
 # include "ICharacter.hpp"
 # include "AMateria.hpp"
-# include <string>
 
 class Character : public ICharacter
 {
@@ -15,10 +14,13 @@ class Character : public ICharacter
 		virtual ~Character( void );
 
 		// Contract rules
-		const std::string&	getName() const;
-		void				equip(AMateria* m);
-		void				unequip(int idx);
-		void				use(int idx, ICharacter& target);
+		const std::string&	getName( void ) const;
+		void				equip( AMateria* m );
+		void				unequip( int idx );
+		void				use( int idx, ICharacter& target );
+
+		// Getter
+		AMateria*			getMateria( int idx ) const;
 
 	private:
 		std::string			_name;
