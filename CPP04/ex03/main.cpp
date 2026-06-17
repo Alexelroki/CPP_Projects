@@ -41,6 +41,7 @@ int main(void)
 	IMateriaSource*	src = new MateriaSource();
 	Character*		bob = new Character("Bob");
 	AMateria*		tmp;
+	AMateria*		trash; // Use this before unequip() and delete after doing it
 
 	// Responsible approach: main creates, main deletes
 	AMateria*		iceTemplate = new Ice();
@@ -94,7 +95,7 @@ int main(void)
     *mage2 = *mage1;
 
     std::cout << "After assignment, Mage2 uses slot 0: ";
-    mage2->use(0, *bob);
+    mage2->use(0, *bob); // Never unequipped and no memory leaks (;
 
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -103,8 +104,13 @@ int main(void)
     mage1->use(3, *bob);
     mage1->use(-1, *bob);
     mage1->use(4, *bob);
+
     mage1->unequip(2); // Unequipping an empty slot should safely do nothing
 	mage1->use(0, *bob); // Everything works good
+
+	trash = mage1->getMateria(0); // 1. Save the addresses before calling unequip() 
+	mage1->unequip(0); // 2. Unequip()
+	delete trash; // 3. Avoid Memory Leak (:
 
     // Final memory cleanup
     delete mage1;
