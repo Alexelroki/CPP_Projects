@@ -11,7 +11,7 @@ class Bureaucrat
 		// Orthodox Canonical Form
 		Bureaucrat();
 		Bureaucrat(const std::string& name, int grade);
-		Bureaucrat(const Bureaucrat& src);
+		Bureaucrat(const Bureaucrat& other);
 		~Bureaucrat();
 
 		// Getters
@@ -26,12 +26,12 @@ class Bureaucrat
 		class GradeTooHighException : public std::exception
 		{
 			public:
-				virtual const char*	what() const throw;
+				virtual const char*	what() const throw();
 		};
 		class GradeTooLowException : public std::exception
 		{
 			public:
-				virtual const char*	what() const throw;
+				virtual const char*	what() const throw();
 		};
 
 	private:
