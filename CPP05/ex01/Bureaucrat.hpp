@@ -42,6 +42,8 @@ class Bureaucrat
 		Bureaucrat&		operator=(const Bureaucrat& src);
 };
 
+//void            signForm( const Bureaucrat& signer );
+
 std::ostream&	operator<<(std::ostream& o, const Bureaucrat& instance);
 
 #endif
