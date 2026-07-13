@@ -21,17 +21,18 @@ Form::Form( const Form& other )
 		throw Form::GradeTooLowException();
 }
 
+Form::~Form( void ) {}
+
 void	Form::beSigned( const Bureaucrat& signer )
 {
-	if ( signer._grade < this->_signGrade )
+	if (signer._grade < this->_signGrade)
 	{
 		this->_isSigned = 1;
-		std::cout << signer << " signed " << this->_name;
+		std::cout << signer << " signed " << this->_name << ".";
 	}
 	else
 	{
-		this->_isSigned = 1;
-		std::cout << signer << " couldn't sign " << this->_name << " because the grade is not in the range (PUT SPECIFIC REASON HERE)";
+		std::cout << signer << " couldn't sign " << this->_name << " because the Bureaucrat's grade is not enough.";
 	}
 }
 
