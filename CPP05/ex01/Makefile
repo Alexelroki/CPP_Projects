@@ -1,9 +1,9 @@
-NAME = Bureaucrat
+NAME = Form
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
-HEADERS = Bureaucrat.hpp
-SRCS = Bureaucrat.cpp  main.cpp
+HEADERS = Bureaucrat.hpp Form.hpp
+SRCS = Bureaucrat.cpp Form.cpp main.cpp
 
 OBJ_DIR = obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
