@@ -5,6 +5,8 @@
 #include <iostream>
 #include <exception>
 
+class Form; // --> signForm()
+
 class Bureaucrat
 {
 	public:
@@ -16,11 +18,12 @@ class Bureaucrat
 
 		// Getters
 		std::string	getName() const;
-		int		getGrade() const;
+		int			getGrade() const;
 
 		// Member Functions
 		void		incrementGrade();
 		void		decrementGrade();
+		void		signForm(Form& form) const;
 
 		// Nested custom exception classes
 		class GradeTooHighException : public std::exception
@@ -36,13 +39,11 @@ class Bureaucrat
 
 	private:
 		const std::string	_name;
-		int			_grade;
+		int					_grade;
 
 		// Disabled assignment operator due to const attribute design constraints
 		Bureaucrat&		operator=(const Bureaucrat& src);
 };
-
-//void            signForm( const Bureaucrat& signer );
 
 std::ostream&	operator<<(std::ostream& o, const Bureaucrat& instance);
 
