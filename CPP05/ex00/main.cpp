@@ -23,7 +23,7 @@ int main()
 		std::cout << "4. After decrement: " << defaultGuy << std::endl;
 
 		// ✅ Showing copied bureaucrat conserves the value before decrement
-		std::cout << "5. Default's bureaucrat copied:" << copyGuy << std::endl;
+		std::cout << "5. Default's bureaucrat copied: " << copyGuy << std::endl;
 
 		// ❌ Trying to decrement one more time: should not work.
 		defaultGuy.decrementGrade();
