@@ -2,15 +2,15 @@ NAME = serialize
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
-HEADERS = ScalarConverter.hpp
-SRCS = ScalarConverter.cpp  main.cpp
+HEADERS = Serializer.hpp
+SRCS = Serializer.cpp  main.cpp
 
 OBJ_DIR = obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 
 all: $(NAME)
 
-$(NAME)
+$(NAME): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 
 $(OBJ_DIR)/%.o: %.cpp $(HEADERS) | $(OBJ_DIR)
