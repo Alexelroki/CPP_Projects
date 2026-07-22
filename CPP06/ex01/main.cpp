@@ -1,41 +1,42 @@
 #include "Serializer.hpp"
 #include <iostream>
 
-int main(void)
+int	main(void)
 {
-	// 1. Instanciamos la estructura Data (en el Stack)
-	Data data;
-	data.s = "Modulo 06 C++ - Serialization";
+	// Create an instance of Data on the stack and initialize its members
+	Data	data;
+
+	data.s = "Module 06 C++ - Serialization";
 	data.n = 42;
 
-	// Guardamos la dirección de memoria original
-	Data* originalPtr = &data;
+	// Store the original memory address
+	Data*	originalPtr = &data;
 
-	std::cout << "--- PRUEBA DE SERIALIZACIÓN ---\n";
-	std::cout << "Puntero original (Data*):   " << originalPtr << "\n";
-	std::cout << "  -> Contenido.s: " << originalPtr->s << "\n";
-	std::cout << "  -> Contenido.n: " << originalPtr->n << "\n\n";
+	std::cout << "--- SERIALIZATION TEST ---\n";
+	std::cout << "Original Pointer (Data*):  " << originalPtr << "\n";
+	std::cout << "  -> Member .s: " << originalPtr->s << "\n";
+	std::cout << "  -> Member .n: " << originalPtr->n << "\n\n";
 
-	// 2. Serializar: Data* -> uintptr_t
-	uintptr_t rawBits = Serializer::serialize(originalPtr);
-	std::cout << "Valor serializado (uintptr_t Hex): 0x" << std::hex << rawBits << std::dec << "\n";
-	std::cout << "Valor serializado (uintptr_t Dec): " << rawBits << "\n\n";
+	// 1. Serialize: Convert Data* pointer to uintptr_t integer
+	uintptr_t	rawBits = Serializer::serialize(originalPtr);
+	std::cout << "Serialized Value (uintptr_t Hex): 0x" << std::hex << rawBits << std::dec << "\n";
+	std::cout << "Serialized Value (uintptr_t Dec): " << rawBits << "\n\n";
 
-	// 3. Deserializar: uintptr_t -> Data*
-	Data* deserializedPtr = Serializer::deserialize(rawBits);
-	std::cout << "Puntero deserializado (Data*): " << deserializedPtr << "\n";
+	// 2. Deserialize: Convert uintptr_t integer back to Data* pointer
+	Data*	deserializedPtr = Serializer::deserialize(rawBits);
+	std::cout << "Deserialized Pointer (Data*): " << deserializedPtr << "\n";
 
-	// 4. Verificación
+	// 3. Verification
 	if (deserializedPtr == originalPtr)
 	{
-		std::cout << "\n[ÉXITO] ¡Los punteros coinciden exactos!\n";
-		std::cout << "  -> Recobrado.s: " << deserializedPtr->s << "\n";
-		std::cout << "  -> Recobrado.n: " << deserializedPtr->n << "\n";
+		std::cout << "\n[SUCCESS] Both pointers are strictly equal!\n";
+		std::cout << "  -> Recovered .s: " << deserializedPtr->s << "\n";
+		std::cout << "  -> Recovered .n: " << deserializedPtr->n << "\n";
 	}
 	else
 	{
-		std::cout << "\n[ERROR] Los punteros NO coinciden.\n";
+		std::cout << "\n[ERROR] Pointers do not match.\n";
 	}
 
-	return 0;
+	return (0);
 }
