@@ -11,7 +11,7 @@ class ScalarConverter
 		// Orthodox Canonical Form
 		ScalarConverter( void );
 		ScalarConverter( const ScalarConverter& other );
-		ScalarConverter		operator=( const ScalarConverter& other );
+		ScalarConverter&		operator=( const ScalarConverter& other );
 		~ScalarConverter( void );
 };
 
