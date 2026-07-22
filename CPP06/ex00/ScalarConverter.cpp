@@ -5,13 +5,29 @@
 #include <limits> // std::numeric_limits
 #include <iomanip> // std::fixed, std::setprecision
 
+ScalarConverter::ScalarConverter( void ) {}
+
+ScalarConverter::ScalarConverter( const ScalarConverter& other )
+{
+	(void)other;
+}
+
+ScalarConverter		ScalarConverter::operator=( const ScalarConverter& other )
+{
+	(void)other;
+	return (*this);
+}
+
+ScalarConverter::~ScalarConverter( void ) {}
+
+
 void		ScalarConverter::convert(const std::string& str)
 {
 	if (str.length() == 1 && !std::isdigit(str[0]))
 	{
 		char	c = str[0];
 
-		std::cout << "char: " << c << "\n";
+		std::cout << "char: '" << c << "'\n";
 		std::cout << "int: " << static_cast<int>(c) << "\n";
 		std::cout << "float: " << static_cast<float>(c) << "\n";
 		std::cout << "double: " << static_cast<double>(c) << "\n";
@@ -39,10 +55,10 @@ void		ScalarConverter::convert(const std::string& str)
 	}
 	else
 	{
-		std::cout << "char: " << static_cast<char>(val) << "\n";
+		std::cout << "char: '" << static_cast<char>(val) << "'\n";
 	}
 	// Int
-	if (val != val ||  val < std::numeric_limits<int>::min() || val > std::numeric_limits<int>::max())
+	if (val != val || val < std::numeric_limits<int>::min() || val > std::numeric_limits<int>::max())
 	{
 		std::cout << "int: impossible\n";
 	}
@@ -55,3 +71,4 @@ void		ScalarConverter::convert(const std::string& str)
 	std::cout << "float: " << static_cast<float>(val) << "f\n";
 	std::cout << "double: " << static_cast<double>(val) << "\n";
 }
+
