@@ -19,8 +19,8 @@ int	main(void)
 
 	// 1. Serialize: Convert Data* pointer to uintptr_t integer
 	uintptr_t	rawBits = Serializer::serialize(originalPtr);
-	std::cout << "Serialized Value (uintptr_t Hex): 0x" << std::hex << rawBits << std::dec << "\n";
-	std::cout << "Serialized Value (uintptr_t Dec): " << rawBits << "\n\n";
+	std::cout << "Serialized Value (uintptr_t Dec): " << rawBits << "\n";
+	std::cout << "Serialized Value (uintptr_t Hex): 0x" << std::hex << rawBits << std::dec << "\n\n";
 
 	// 2. Deserialize: Convert uintptr_t integer back to Data* pointer
 	Data*	deserializedPtr = Serializer::deserialize(rawBits);
