@@ -20,7 +20,6 @@ Base*	generate(void)
 		return (new C());
 }
 
-// 2. Identification using POINTER
 void	identify(Base* p)
 {
 	if (dynamic_cast<A*>(p) != NULL)
@@ -31,7 +30,6 @@ void	identify(Base* p)
 		std::cout << "C\n";
 }
 
-// 3. Identification using REFERENCE (Using pointers internally is forbidden!)
 void	identify(Base& p)
 {
 	try
@@ -40,7 +38,9 @@ void	identify(Base& p)
 		std::cout << "A\n";
 		return ;
 	}
-	catch (const std::exception&) {}
+	catch (const std::exception&)
+	{
+	}
 
 	try
 	{
@@ -48,7 +48,9 @@ void	identify(Base& p)
 		std::cout << "B\n";
 		return ;
 	}
-	catch (const std::exception&) {}
+	catch (const std::exception&)
+	{
+	}
 
 	try
 	{
@@ -56,7 +58,9 @@ void	identify(Base& p)
 		std::cout << "C\n";
 		return ;
 	}
-	catch (const std::exception&) {}
+	catch (const std::exception&)
+	{
+	}
 }
 
 int	main(void)
@@ -64,21 +68,16 @@ int	main(void)
 	// Seed for randomness
 	std::srand(static_cast<unsigned int>(std::time(NULL)));
 
-	std::cout << "--- TEST 1: Generation and Destruction ---\n";
 	for (int i = 0; i < 5; i++)
 	{
 		Base*	instance = generate();
 
-		std::cout << "Instance " << i + 1 << " -> Pointer: ";
 		identify(instance);
 
-		std::cout << "Instance " << i + 1 << " -> Reference: ";
 		identify(*instance);
 
-		// Clean deletion of the resource created with 'new'
 		delete instance;
 		instance = NULL;
-		std::cout << "-----------------------\n";
 	}
 
 	return (0);
