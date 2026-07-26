@@ -2,7 +2,7 @@ NAME = serialize
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
-HEADERS = Serializer.hpp
+HEADERS = Serializer.hpp Data.hpp
 SRCS = Serializer.cpp  main.cpp
 
 OBJ_DIR = obj
