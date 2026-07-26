@@ -1,7 +1,7 @@
 #include "ScalarConverter.hpp"
 #include <iostream>
 #include <cstdlib> // std::strtod
-#include <cmath> // std::isnan, std::isinf
+#include <cctype> // std::isdigit, std::isprint
 #include <limits> // std::numeric_limits
 #include <iomanip> // std::fixed, std::setprecision
 
@@ -29,7 +29,8 @@ void		ScalarConverter::convert(const std::string& str)
 
 		std::cout << "char: '" << c << "'\n";
 		std::cout << "int: " << static_cast<int>(c) << "\n";
-		std::cout << "float: " << static_cast<float>(c) << "\n";
+		std::cout << std::fixed << std::setprecision(1);
+		std::cout << "float: " << static_cast<float>(c) << "f\n";
 		std::cout << "double: " << static_cast<double>(c) << "\n";
 		return ;
 	}
@@ -71,4 +72,3 @@ void		ScalarConverter::convert(const std::string& str)
 	std::cout << "float: " << static_cast<float>(val) << "f\n";
 	std::cout << "double: " << static_cast<double>(val) << "\n";
 }
-
