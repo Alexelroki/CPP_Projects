@@ -24,11 +24,11 @@ Base*	generate(void)
 void	identify(Base* p)
 {
 	if (dynamic_cast<A*>(p) != NULL)
-		std::cout << "A\n";
+		std::cout << "A";
 	else if (dynamic_cast<B*>(p) != NULL)
-		std::cout << "B\n";
+		std::cout << "B";
 	else if (dynamic_cast<C*>(p) != NULL)
-		std::cout << "C\n";
+		std::cout << "C";
 }
 
 void	identify(Base& p)
@@ -36,7 +36,7 @@ void	identify(Base& p)
 	try
 	{
 		(void)dynamic_cast<A&>(p);
-		std::cout << "A\n";
+		std::cout << "A";
 		return ;
 	}
 	catch (const std::exception&)
@@ -46,7 +46,7 @@ void	identify(Base& p)
 	try
 	{
 		(void)dynamic_cast<B&>(p);
-		std::cout << "B\n";
+		std::cout << "B";
 		return ;
 	}
 	catch (const std::exception&)
@@ -56,7 +56,7 @@ void	identify(Base& p)
 	try
 	{
 		(void)dynamic_cast<C&>(p);
-		std::cout << "C\n";
+		std::cout << "C";
 		return ;
 	}
 	catch (const std::exception&)
@@ -75,9 +75,11 @@ int	main(void)
 
 		std::cout << "Pointer-> ";
 		identify(instance);
+		std::cout << "\n";
 
 		std::cout << "Reference-> ";
 		identify(*instance);
+		std::cout << "\n";
 
 		delete instance;
 		instance = NULL;
