@@ -73,8 +73,10 @@ int	main(void)
 	{
 		Base*	instance = generate();
 
+		std::cout << "Pointer-> ";
 		identify(instance);
 
+		std::cout << "Reference-> ";
 		identify(*instance);
 
 		delete instance;
