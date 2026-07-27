@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstdlib>   // std::rand, std::srand
 #include <ctime>     // std::time
+#include <unistd.h>  // getpid()
 #include <exception>
 
 // 1. Random Generator
@@ -66,7 +67,7 @@ void	identify(Base& p)
 int	main(void)
 {
 	// Seed for randomness
-	std::srand(static_cast<unsigned int>(std::time(NULL)));
+	std::srand(static_cast<unsigned int>(std::time(NULL)) ^ getpid());
 
 	for (int i = 0; i < 5; i++)
 	{
