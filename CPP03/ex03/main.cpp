@@ -34,12 +34,12 @@ int main( void )
 	copy2.takeDamage(1);
 	copy2.whoAmI();
 
-	/*std::cout << "\n--- ENERGY TEST ---" << std::endl;
+	std::cout << "\n--- ENERGY TEST ---" << std::endl;
 	DiamondTrap	energytest("EN3RGY-TP");
-	for (int i = 1; i <= 100; i++)
+	for (int i = 1; i <= 50; i++)
 	{
 		std::cout << i << ". ";
-		energytest.attack("a dangerous bandit"); // 100 energy points consumed
+		energytest.attack("a dangerous bandit"); // 50 energy points consumed
 	}
 	energytest.attack("a dangerous bandit"); // No energy to attack*/
 
