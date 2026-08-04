@@ -50,10 +50,10 @@ int main(int argc, char** argv)
 			std::cout << '\n';
 
 			const MutantStack<int>&	constStack(mstack);
-            std::cout << "Const: ";
-            for (MutantStack<int>::const_iterator cit = constStack.begin(); cit != constStack.end(); ++cit)
-                std::cout << *cit << " ";
-            std::cout << '\n';
+			std::cout << "Const: ";
+			for (MutantStack<int>::const_iterator cit = constStack.begin(); cit != constStack.end(); ++cit)
+				std::cout << *cit << " ";
+			std::cout << '\n';
 
 			std::stack<int>	s(mstack);
 		}
@@ -96,10 +96,10 @@ int main(int argc, char** argv)
 			std::cout << '\n';
 
 			const std::list<int>&	constLst(lst);
-            std::cout << "Const: ";
-            for (std::list<int>::const_iterator cit = constLst.begin(); cit != constLst.end(); ++cit)
-                std::cout << *cit << " ";
-            std::cout << '\n';
+			std::cout << "Const: ";
+			for (std::list<int>::const_iterator cit = constLst.begin(); cit != constLst.end(); ++cit)
+				std::cout << *cit << " ";
+			std::cout << '\n';
 
 			std::stack<int, std::list<int> >	s(lst);
 		}
