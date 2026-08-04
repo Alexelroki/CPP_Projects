@@ -1,8 +1,8 @@
 #ifndef SPAN_HPP
 # define SPAN_HPP
 
-# include <algorithm>
 # include <exception>
+# include <stdexcept>
 # include <iterator>
 # include <vector>
 
@@ -55,6 +55,7 @@ class Span
 	private:
 		unsigned int		maxSize_;
 		std::vector<int>	numbers_;
+
 		Span( void );
 };
 
