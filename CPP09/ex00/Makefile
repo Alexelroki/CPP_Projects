@@ -3,7 +3,7 @@ CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
 HEADERS = BitcoinExchange.hpp
-SRCS = main.cpp
+SRCS = main.cpp BitcoinExchange.cpp
 
 OBJ_DIR = .obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
