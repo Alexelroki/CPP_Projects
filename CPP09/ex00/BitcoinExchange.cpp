@@ -69,20 +69,19 @@ bool	BitcoinExchange::isValidValue( const std::string& valStr, double& value) co
 	errno = 0;
 	value = std::strtod(valStr.c_str(), &end);
 
-	if (valStr.empty() || end == valStr.c_str() || *end != '\0'
-		|| errno == ERANGE || value != value)
+	if (valStr.empty() || end == valStr.c_str() || *end != '\0' || value != value)
 	{
-		std::cerr << "Error: not a valid number." << '\n';
+		std::cerr << "Error: bad input => " << valStr << '\n';
 		return (false);
 	}
-	if (value < 0.0)
+	if (valStr[0] == '-' || value < 0.0)
 	{
-		std::cerr << "Error: not a positive number." << '\n';
+		std::cerr << "Error: not a positive number.\n";
 		return (false);
 	}
-	if (value > 1000.0)
+	if (errno == ERANGE || value > 1000.0)
 	{
-		std::cerr << "Error: number too large." << '\n';
+		std::cerr << "Error: too large a number.\n";
 		return (false);
 	}
 	return (true);
@@ -137,10 +136,19 @@ void BitcoinExchange::processInput(const std::string& inputPath) const
 	if (!std::getline(file, line))
 		throw std::runtime_error("Error: input file is empty.");
 
+	std::string		header = line;
+	trim(header);
+	if (header != "date | value")
+		throw std::runtime_error("Error: invalid input file header.");
+
+	size_t			processedLines = 0;
+
 	while (std::getline(file, line))
 	{
 		if (line.empty())
 			continue ;
+
+		++processedLines;
 
 		size_t		pipePos = line.find('|');
 		if (pipePos == std::string::npos)
@@ -170,10 +178,12 @@ void BitcoinExchange::processInput(const std::string& inputPath) const
 		if (it == database_.begin())
 		{
 			std::cerr << "Error: date is older than any recorded data => " << date << '\n';
-			continue;
+			continue ;
 		}
 		--it;
 
 		std::cout << date << " => " << value << " = " << (value * it->second) << '\n';
 	}
+	if (processedLines == 0)
+		throw std::runtime_error("Error: no data entries found in input file.");
 }
