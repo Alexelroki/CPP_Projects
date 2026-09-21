@@ -1,8 +1,9 @@
 #ifndef PmergeMe_HPP
 # define PmergeMe_HPP
 
-# include <stack>
 # include <string>
+# include <vector>
+# include <deque>
 
 class PmergeMe
 {
@@ -13,7 +14,12 @@ class PmergeMe
 		PmergeMe&			operator=( const PmergeMe& other );
 		~PmergeMe( void );
 
+		void				parse( int argc, char** argv );
+		void				sort( void );
+
 	private:
+		std::vector<int>	vec_;
+		std::deque<int>		deq_;
 };
 
 #endif
