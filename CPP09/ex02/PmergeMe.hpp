@@ -1,6 +1,7 @@
 #ifndef PmergeMe_HPP
 # define PmergeMe_HPP
 
+# include <cstddef>
 # include <string>
 # include <vector>
 # include <deque>
@@ -20,6 +21,12 @@ class PmergeMe
 	private:
 		std::vector<int>	vec_;
 		std::deque<int>		deq_;
+
+		static void					sortVector( std::vector<int>& v );
+		static std::vector<size_t>	buildInsertionVec( size_t pendingCount );
+
+		static void					sortDeque( std::deque<int>& d );
+		static std::deque<size_t>	buildInsertionDeq( size_t pendingCount );
 };
 
 #endif
