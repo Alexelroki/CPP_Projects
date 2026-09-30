@@ -47,9 +47,15 @@ void				PmergeMe::parse( int argc, char** argv )
 	}
 }
 
+static bool	comparePairs( const std::pair<int, int>& a, const std::pair<int, int>& b )
+{
+	return (a.first < b.first);
+}
+
 std::vector<size_t>	PmergeMe::buildInsertionVec( size_t pendingCount )
 {
 	std::vector<size_t> order;
+	if (pendingCount <= 1)
 		return (order);
 	std::vector<size_t> jacob;
 	jacob.push_back(0);
@@ -80,45 +86,53 @@ void				PmergeMe::sortVector( std::vector<int>& v )
 	if (v.size() <= 1)
 		return ;
 
-	int				odd = -1;
-	bool			hasOdd = (v.size() % 2 != 0);
+	int		odd = -1;
+	bool	hasOdd = (v.size() % 2 != 0);
 	if (hasOdd)
 	{
 		odd = v.back();
 		v.pop_back();
 	}
 
-	std::vector<int>	mainChain;
-	std::vector<int>	pend;
+	// 1. Crear parejas: aseguramos que first es el mayor con swap (sin else)
+	std::vector<std::pair<int, int> >	pairs;
 	for (size_t i = 0; i < v.size(); i += 2)
 	{
-		if (v[i] > v[i + 1])
-		{
-			mainChain.push_back(v[i]);
-			pend.push_back(v[i + 1]);
-		}
-		else
-		{
-			mainChain.push_back(v[i + 1]);
-			pend.push_back(v[i]);
-		}
+		int	high = v[i];
+		int	low = v[i + 1];
+		if (high < low)
+			std::swap(high, low);
+		pairs.push_back(std::make_pair(high, low));
 	}
 
-	sortVector(mainChain);
+	// 2. Ordenar las parejas comparando sus elementos mayores (first)
+	std::sort(pairs.begin(), pairs.end(), comparePairs);
+
+	// 3. Separar en mainChain (mayores ordenados) y pend (menores correspondientes)
+	std::vector<int>	mainChain;
+	std::vector<int>	pend;
+	for (size_t i = 0; i < pairs.size(); ++i)
+	{
+		mainChain.push_back(pairs[i].first);
+		pend.push_back(pairs[i].second);
+	}
+
+	// 4. El menor del primer elemento entra gratis al principio
 	mainChain.insert(mainChain.begin(), pend[0]);
 
-	// 4. Inserción dinámica por bloques según Jacobsthal
-	std::vector<size_t> order = buildInsertionVec(pend.size());
+	// 5. Inserción binaria del resto de menores siguiendo Jacobsthal
+	std::vector<size_t>	order = buildInsertionVec(pend.size());
 	for (size_t i = 0; i < order.size(); ++i)
 	{
-		int val = pend[order[i]];
-		std::vector<int>::iterator it = std::lower_bound(mainChain.begin(), mainChain.end(), val);
+		int	val = pend[order[i]];
+		std::vector<int>::iterator	it = std::lower_bound(mainChain.begin(), mainChain.end(), val);
 		mainChain.insert(it, val);
 	}
 
+	// 6. Inserción del sobrante impar si existía
 	if (hasOdd)
 	{
-		std::vector<int>::iterator it = std::lower_bound(mainChain.begin(), mainChain.end(), odd);
+		std::vector<int>::iterator	it = std::lower_bound(mainChain.begin(), mainChain.end(), odd);
 		mainChain.insert(it, odd);
 	}
 
@@ -161,37 +175,40 @@ void				PmergeMe::sortDeque( std::deque<int>& d )
 	if (d.size() <= 1)
 		return ;
 
-	int				odd = -1;
-	bool			hasOdd = (d.size() % 2 != 0);
+	int		odd = -1;
+	bool	hasOdd = (d.size() % 2 != 0);
 	if (hasOdd)
 	{
 		odd = d.back();
 		d.pop_back();
 	}
 
-	std::deque<int>	mainChain;
-	std::deque<int>	pend;
+	std::deque<std::pair<int, int> >	pairs;
 	for (size_t i = 0; i < d.size(); i += 2)
 	{
-		if (d[i] > d[i + 1])
-		{
-			mainChain.push_back(d[i]);
-			pend.push_back(d[i + 1]);
-		}
-		else
-		{
-			mainChain.push_back(d[i + 1]);
-			pend.push_back(d[i]);
-		}
+		int	high = d[i];
+		int	low = d[i + 1];
+		if (high < low)
+			std::swap(high, low);
+		pairs.push_back(std::make_pair(high, low));
 	}
 
-	sortDeque(mainChain);
+	std::sort(pairs.begin(), pairs.end(), comparePairs);
+
+	std::deque<int>	mainChain;
+	std::deque<int>	pend;
+	for (size_t i = 0; i < pairs.size(); ++i)
+	{
+		mainChain.push_back(pairs[i].first);
+		pend.push_back(pairs[i].second);
+	}
+
 	mainChain.push_front(pend[0]);
 
 	std::deque<size_t>	order = buildInsertionDeq(pend.size());
 	for (size_t i = 0; i < order.size(); ++i)
 	{
-		int			val = pend[order[i]];
+		int	val = pend[order[i]];
 		std::deque<int>::iterator	it = std::lower_bound(mainChain.begin(), mainChain.end(), val);
 		mainChain.insert(it, val);
 	}
@@ -212,14 +229,14 @@ void				PmergeMe::sort( void )
 		std::cout << vec_[i] << ((i + 1 < vec_.size()) ? " " : "");
 	std::cout << '\n';
 
-	std::clock_t startVec = std::clock();
+	std::clock_t	startVec = std::clock();
 	sortVector(vec_);
-	std::clock_t endVec = std::clock();
+	std::clock_t	endVec = std::clock();
 	double timeVec = static_cast<double>(endVec - startVec) / CLOCKS_PER_SEC * 1000000.0;
 
-	std::clock_t startDeq = std::clock();
+	std::clock_t	startDeq = std::clock();
 	sortDeque(deq_);
-	std::clock_t endDeq = std::clock();
+	std::clock_t	endDeq = std::clock();
 	double timeDeq = static_cast<double>(endDeq - startDeq) / CLOCKS_PER_SEC * 1000000.0;
 
 	std::cout << "After:  ";
