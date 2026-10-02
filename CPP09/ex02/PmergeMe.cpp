@@ -200,7 +200,6 @@ void	PmergeMe::sortDeque( std::deque<int>& d )
 		largerElements.push_back(high);
 	}
 
-	// Recursión
 	sortDeque(largerElements);
 
 	std::deque<int>	mainChain = largerElements;
