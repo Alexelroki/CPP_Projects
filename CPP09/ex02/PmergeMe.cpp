@@ -2,6 +2,7 @@
 #include <cctype>
 #include <cstdlib>
 #include <climits>
+#include <cerrno>
 #include <iostream>
 #include <algorithm>
 #include <ctime>
@@ -12,7 +13,7 @@ PmergeMe::PmergeMe( void ) : vec_(), deq_() {}
 
 PmergeMe::PmergeMe( const PmergeMe& other ) : vec_(other.vec_), deq_(other.deq_) {}
 
-PmergeMe&			PmergeMe::operator=( const PmergeMe& other )
+PmergeMe&	PmergeMe::operator=( const PmergeMe& other )
 {
 	if (this != &other)
 	{
@@ -24,7 +25,7 @@ PmergeMe&			PmergeMe::operator=( const PmergeMe& other )
 
 PmergeMe::~PmergeMe( void ) {}
 
-void				PmergeMe::parse( int argc, char** argv )
+void		PmergeMe::parse( int argc, char** argv )
 {
 	for (int i = 1; i < argc; ++i)
 	{
@@ -38,8 +39,9 @@ void				PmergeMe::parse( int argc, char** argv )
 				throw std::runtime_error("Error");
 		}
 
-		long		num = std::strtol(str.c_str(), NULL, 10);
-		if (num <= 0 || num > INT_MAX)
+		errno = 0;
+		long	num = std::strtol(str.c_str(), NULL, 10);
+		if (errno == ERANGE || num <= 0 || num > INT_MAX)
 			throw std::runtime_error("Error");
 
 		vec_.push_back(static_cast<int>(num));
@@ -47,41 +49,38 @@ void				PmergeMe::parse( int argc, char** argv )
 	}
 }
 
-static bool	comparePairs( const std::pair<int, int>& a, const std::pair<int, int>& b )
+std::vector<size_t>		PmergeMe::buildInsertionVec( size_t pendingCount )
 {
-	return (a.first < b.first);
-}
-
-std::vector<size_t>	PmergeMe::buildInsertionVec( size_t pendingCount )
-{
-	std::vector<size_t> order;
+	std::vector<size_t>	order;
 	if (pendingCount <= 1)
 		return (order);
-	std::vector<size_t> jacob;
+
+	std::vector<size_t>	jacob;
 	jacob.push_back(0);
 	jacob.push_back(1);
 	while (jacob.back() < pendingCount)
 	{
-		size_t		next = jacob.back() + (2 * jacob[jacob.size() - 2]);
+		size_t	next = jacob.back() + (2 * jacob[jacob.size() - 2]);
 		jacob.push_back(next);
 	}
 
-	size_t			lastJacob = 1;
-	for (size_t i = 3; i < jacob.size() ; ++i)
+	size_t	lastJacob = 1;
+	for (size_t i = 3; i < jacob.size(); ++i)
 	{
-		size_t		currentJacob = jacob[i];
-		size_t		start = (currentJacob > pendingCount) ? pendingCount : currentJacob;
+		size_t	currentJacob = jacob[i];
+		size_t	start = (currentJacob > pendingCount) ? pendingCount : currentJacob;
 
 		for (size_t j = start; j > lastJacob; --j)
 			order.push_back(j - 1);
+
 		lastJacob = currentJacob;
-		if (currentJacob > pendingCount)
+		if (currentJacob >= pendingCount)
 			break ;
 	}
 	return (order);
 }
 
-void				PmergeMe::sortVector( std::vector<int>& v )
+void	PmergeMe::sortVector( std::vector<int>& v )
 {
 	if (v.size() <= 1)
 		return ;
@@ -94,8 +93,9 @@ void				PmergeMe::sortVector( std::vector<int>& v )
 		v.pop_back();
 	}
 
-	// 1. Crear parejas: aseguramos que first es el mayor con swap (sin else)
 	std::vector<std::pair<int, int> >	pairs;
+	std::vector<int>					largerElements;
+
 	for (size_t i = 0; i < v.size(); i += 2)
 	{
 		int	high = v[i];
@@ -103,24 +103,29 @@ void				PmergeMe::sortVector( std::vector<int>& v )
 		if (high < low)
 			std::swap(high, low);
 		pairs.push_back(std::make_pair(high, low));
+		largerElements.push_back(high);
 	}
 
-	// 2. Ordenar las parejas comparando sus elementos mayores (first)
-	std::sort(pairs.begin(), pairs.end(), comparePairs);
+	sortVector(largerElements);
 
-	// 3. Separar en mainChain (mayores ordenados) y pend (menores correspondientes)
-	std::vector<int>	mainChain;
+	std::vector<int>	mainChain = largerElements;
 	std::vector<int>	pend;
-	for (size_t i = 0; i < pairs.size(); ++i)
+
+	for (size_t i = 0; i < mainChain.size(); ++i)
 	{
-		mainChain.push_back(pairs[i].first);
-		pend.push_back(pairs[i].second);
+		for (size_t j = 0; j < pairs.size(); ++j)
+		{
+			if (pairs[j].first == mainChain[i])
+			{
+				pend.push_back(pairs[j].second);
+				pairs.erase(pairs.begin() + j);
+				break ;
+			}
+		}
 	}
 
-	// 4. El menor del primer elemento entra gratis al principio
 	mainChain.insert(mainChain.begin(), pend[0]);
 
-	// 5. Inserción binaria del resto de menores siguiendo Jacobsthal
 	std::vector<size_t>	order = buildInsertionVec(pend.size());
 	for (size_t i = 0; i < order.size(); ++i)
 	{
@@ -129,7 +134,6 @@ void				PmergeMe::sortVector( std::vector<int>& v )
 		mainChain.insert(it, val);
 	}
 
-	// 6. Inserción del sobrante impar si existía
 	if (hasOdd)
 	{
 		std::vector<int>::iterator	it = std::lower_bound(mainChain.begin(), mainChain.end(), odd);
@@ -150,15 +154,15 @@ std::deque<size_t>	PmergeMe::buildInsertionDeq( size_t pendingCount )
 	jacob.push_back(1);
 	while (jacob.back() < pendingCount)
 	{
-		size_t		next = jacob.back() + 2 * jacob[jacob.size() - 2];
+		size_t	next = jacob.back() + (2 * jacob[jacob.size() - 2]);
 		jacob.push_back(next);
 	}
 
-	size_t			lastJacob = 1;
+	size_t	lastJacob = 1;
 	for (size_t i = 3; i < jacob.size(); ++i)
 	{
-		size_t		currentJacob = jacob[i];
-		size_t		start = (currentJacob > pendingCount) ? pendingCount : currentJacob;
+		size_t	currentJacob = jacob[i];
+		size_t	start = (currentJacob > pendingCount) ? pendingCount : currentJacob;
 
 		for (size_t j = start; j > lastJacob; --j)
 			order.push_back(j - 1);
@@ -170,7 +174,7 @@ std::deque<size_t>	PmergeMe::buildInsertionDeq( size_t pendingCount )
 	return (order);
 }
 
-void				PmergeMe::sortDeque( std::deque<int>& d )
+void	PmergeMe::sortDeque( std::deque<int>& d )
 {
 	if (d.size() <= 1)
 		return ;
@@ -184,6 +188,8 @@ void				PmergeMe::sortDeque( std::deque<int>& d )
 	}
 
 	std::deque<std::pair<int, int> >	pairs;
+	std::deque<int>						largerElements;
+
 	for (size_t i = 0; i < d.size(); i += 2)
 	{
 		int	high = d[i];
@@ -191,16 +197,26 @@ void				PmergeMe::sortDeque( std::deque<int>& d )
 		if (high < low)
 			std::swap(high, low);
 		pairs.push_back(std::make_pair(high, low));
+		largerElements.push_back(high);
 	}
 
-	std::sort(pairs.begin(), pairs.end(), comparePairs);
+	// Recursión
+	sortDeque(largerElements);
 
-	std::deque<int>	mainChain;
+	std::deque<int>	mainChain = largerElements;
 	std::deque<int>	pend;
-	for (size_t i = 0; i < pairs.size(); ++i)
+
+	for (size_t i = 0; i < mainChain.size(); ++i)
 	{
-		mainChain.push_back(pairs[i].first);
-		pend.push_back(pairs[i].second);
+		for (size_t j = 0; j < pairs.size(); ++j)
+		{
+			if (pairs[j].first == mainChain[i])
+			{
+				pend.push_back(pairs[j].second);
+				pairs.erase(pairs.begin() + j);
+				break ;
+			}
+		}
 	}
 
 	mainChain.push_front(pend[0]);
@@ -222,7 +238,7 @@ void				PmergeMe::sortDeque( std::deque<int>& d )
 	d = mainChain;
 }
 
-void				PmergeMe::sort( void )
+void	PmergeMe::sort( void )
 {
 	std::cout << "Before: ";
 	for (size_t i = 0; i < vec_.size(); ++i)
@@ -232,12 +248,12 @@ void				PmergeMe::sort( void )
 	std::clock_t	startVec = std::clock();
 	sortVector(vec_);
 	std::clock_t	endVec = std::clock();
-	double timeVec = static_cast<double>(endVec - startVec) / CLOCKS_PER_SEC * 1000000.0;
+	double	timeVec = static_cast<double>(endVec - startVec) / CLOCKS_PER_SEC * 1000000.0;
 
 	std::clock_t	startDeq = std::clock();
 	sortDeque(deq_);
 	std::clock_t	endDeq = std::clock();
-	double timeDeq = static_cast<double>(endDeq - startDeq) / CLOCKS_PER_SEC * 1000000.0;
+	double	timeDeq = static_cast<double>(endDeq - startDeq) / CLOCKS_PER_SEC * 1000000.0;
 
 	std::cout << "After:  ";
 	for (size_t i = 0; i < vec_.size(); ++i)
